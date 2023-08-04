@@ -1,6 +1,6 @@
 {
     "buildCommand": "cd client/frontend && npm install && npm run build && cd ../.. && cd server && npm install && npm run build",
-    "outputPath": "server/dist",
+    "outputDirectory": "client/frontend/dist",
     "framework": "vite",
     "rewrites": [
         {
