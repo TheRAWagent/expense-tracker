@@ -1,0 +1,140 @@
+*{
+  box-sizing: border-box;
+}
+body
+{
+  background-color: #16171d;
+}
+main
+{
+  max-width: 800px;
+  margin: 30px auto;
+}
+h1
+{
+  text-align: center;
+  color: #fff;
+  margin: 0;
+}
+form
+{
+  margin-top: 20px;
+}
+form input
+{
+  width: 100%;
+  background-color: transparent;
+  color: #ddd;
+  border: 2px solid #30313d;
+  padding: 2px 5px;
+  border-radius: 5px;
+}
+form div.basic
+{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.head{
+  font-size: 80px;
+}
+
+.expenseName{
+  height: 30px;
+  margin: 10px;
+}
+
+.expenseDate{
+  height: 30px;
+  margin: 10px 10px;
+}
+
+.addDescription{
+  height: 30px;
+  margin: 10px 10px;
+}
+
+.addTxn{
+  background-color: transparent;
+  
+}
+
+.addTxnWrapper
+{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.addTxnBtn{
+  margin: 10px 10px;
+  height: 25px;
+  border-radius: 20px;
+  background-color: #26b8db;
+}
+
+.transaction{
+  max-width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  /* display: grid; */
+  /* grid-template-columns: 1fr 1fr; */
+  margin-bottom: 20px;
+  color: white;
+  border: 1px solid #30313d;
+}
+
+.name{
+  font-size: xx-large;
+  font-weight: 600;
+  margin: 10px;
+  margin-bottom: 10px;
+  border: none;
+}
+.transactions{
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  border: none;
+}
+
+.left{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
+  margin: 10px;
+  border: none;
+
+}
+
+.right{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: end;
+  margin: 10px;
+  border: none;
+}
+
+.description{
+  margin-left: 10px;
+  border: none;
+  color: #ddd;
+}
+
+.price{
+  font-size: xx-large;
+  margin-right: 10px;
+}
+
+.datetime{
+  margin-left: 10px;
+  border: none;
+  color: #ddd;
+}
