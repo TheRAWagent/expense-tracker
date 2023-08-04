@@ -1,0 +1,11 @@
+{
+    "buildCommand": "cd client/frontend && npm install && npm run build && cd ../.. && cd server && npm install && npm run build",
+    "outputPath": "server/dist",
+    "framework": "vite",
+    "rewrites": [
+        {
+            "source": "/api/(.*)",
+            "destination": "http://localhost:5000/api/$1"
+        }
+    ]
+}
