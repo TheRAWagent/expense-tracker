@@ -14,7 +14,6 @@ function App(): JSX.Element {
     })
       .then(res => res.json())
       .then(data => {
-        // console.log(data);
         setTransactions(data)
         let sum: number = 0
         transactions.forEach((transaction) => {

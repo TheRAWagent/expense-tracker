@@ -11,6 +11,10 @@ app.use(bodyParser.json());
 app.use(cors());
 ConnectDB();
 
+app.get('/', (req, res) => {
+    res.redirect(process.env.CLIENT_URL || "localhost:5173");
+})
+
 app.get('/api', (req, res) => {
     Transaction.find().then((data) => {
         res.status(200).json(data);
