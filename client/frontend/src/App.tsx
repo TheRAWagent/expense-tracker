@@ -4,6 +4,7 @@ import './App.css'
 function App(): JSX.Element {
   const [transactions, setTransactions] = useState<{ name: string, date: string, description: string, price: number }[]>([])
   const APIURL: string = import.meta.env.VITE_API_URL
+  const [balance, setBalance] = useState<number>(0)
   useEffect(() => {
     fetch(`${APIURL}`, {
       method: 'GET',
@@ -15,6 +16,11 @@ function App(): JSX.Element {
       .then(data => {
         // console.log(data);
         setTransactions(data)
+        let sum: number = 0
+        transactions.forEach((transaction) => {
+          sum += transaction.price
+        })
+        setBalance(sum)
       })
   }, [])
 
@@ -38,9 +44,13 @@ function App(): JSX.Element {
         setDate(new Date())
         setDescription('')
         setTransactions(data)
+        let sum: number = 0
+        transactions.forEach((transaction) => {
+          sum += transaction.price
+        })
+        setBalance(sum)
       })
   }
-  const [balance, setBalance] = useState<number>(0)
   const [name, setName] = useState<string>('')
   const [date, setDate] = useState<Date>(new Date())
   const [description, setDescription] = useState<string>('')
@@ -51,13 +61,6 @@ function App(): JSX.Element {
       case 'txnDescription': setDescription(e.target.value); break;
     }
   }
-  useEffect(()=>{
-    let sum:number=0
-    transactions.forEach((transaction)=>{
-      sum+=transaction.price
-    })
-    setBalance(sum)
-  },[balance])
   return (
     <main>
       <div>
@@ -65,10 +68,10 @@ function App(): JSX.Element {
           <div>
             ⁴₀⁴
           </div>
-          <div style={{color: balance>=0?'green':'red'}}>
-            {balance>=0?`₹${balance}`:`-₹${-balance}`}  
+          <div style={{ color: balance >= 0 ? 'green' : 'red' }}>
+            {balance >= 0 ? `₹${balance}` : `-₹${-balance}`}
           </div>
-          </h1>
+        </h1>
         <form method='POST' onSubmit={sendData}>
           <div className='basic'>
             <input className='expenseName' type="text" name="transactionName" value={name} onChange={handleChange} id="" placeholder='name' />
@@ -91,7 +94,7 @@ function App(): JSX.Element {
           </div>
         </form>
         <div className="transactions">
-          {transactions.length>0 && transactions.map((transaction, index) => {
+          {transactions.length > 0 && transactions.map((transaction, index) => {
             return (
               <div className="transaction" key={index}>
                 <div className="left">
@@ -99,9 +102,9 @@ function App(): JSX.Element {
                   <div className="description">{transaction.description}</div>
                 </div>
                 <div className="right">
-                  <div 
-                   className="price"
-                   style={{ color: `${transaction.price < 0 ? "red" : "green"}` }}
+                  <div
+                    className="price"
+                    style={{ color: `${transaction.price < 0 ? "red" : "green"}` }}
                   >
                     {transaction.price >= 0 ? "+₹" : "₹"}{transaction.price}</div>
                   <div className="datetime">{`${new Date(transaction.date).toLocaleString()}`}</div>
