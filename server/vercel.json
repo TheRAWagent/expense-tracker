@@ -3,7 +3,6 @@
     "builds":[
         {
             "src": "src/index.js",
-            "useTypescript": true,
             "use": "@types/node"
         }
     ],
