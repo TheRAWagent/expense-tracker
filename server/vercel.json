@@ -1,4 +1,3 @@
 {
-    "buildCommand": "npm run build && npm run start",
-    "outputPath": "dist/"
+    "buildCommand": "npm run build && npm run start"
 }
