@@ -26,7 +26,7 @@ app.get('/api', (req, res) => {
 
 })
 
-app.post('/api/addTransaction', (req, res) => {
+app.post('/api/addTransaction', async (req, res) => {
     const price = req.body.name.split(" ")[0];
     if (isNaN(Number(price))) {
         res.status(500).json({ message: "Price must be a number" });
@@ -40,7 +40,7 @@ app.post('/api/addTransaction', (req, res) => {
         description: req.body.description,
         date: req.body.date
     });
-    transaction.save().then(() => {
+    await transaction.save().then(() => {
         Transaction.find().then((data) => {
             res.status(200).json(data);
         }
