@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState} from 'react'
 import './App.css'
 
 function App(): JSX.Element {
@@ -6,27 +6,30 @@ function App(): JSX.Element {
   const APIURL: string = import.meta.env.VITE_API_URL
   const [balance, setBalance] = useState<number>(0)
   useEffect(() => {
-    fetch(`${APIURL}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => res.json())
-      .then(data => {
-        setTransactions(data)
-        let sum: number = 0
-        transactions.forEach((transaction) => {
-          sum += transaction.price
-        })
-        setBalance(sum)
-      })
+    getData()
   }, [])
+  useEffect(() => {
+    let total = 0
+    transactions.forEach(transaction => {
+      total += transaction.price
+    })
+    setBalance(total)
+  }
+  , [transactions])
+    const getData=async ()=>{
+      await fetch(`${APIURL}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(data => setTransactions(data))
+    }
 
-  const sendData = (e: React.FormEvent<HTMLFormElement>) => {
+  const sendData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-
-    fetch(`${APIURL}/addTransaction`, {
+    await fetch(`${APIURL}/addTransaction`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -38,16 +41,11 @@ function App(): JSX.Element {
       })
     })
       .then(res => res.json())
-      .then(data => {
+      .then(async data => {
         setName('')
         setDate(new Date())
         setDescription('')
         setTransactions(data)
-        let sum: number = 0
-        transactions.forEach((transaction) => {
-          sum += transaction.price
-        })
-        setBalance(sum)
       })
   }
   const [name, setName] = useState<string>('')
@@ -76,7 +74,7 @@ function App(): JSX.Element {
             <input className='expenseName' type="text" name="transactionName" value={name} onChange={handleChange} id="" placeholder='name' />
             <input
               className='expenseDate'
-              type="datetime-local"
+              type="datetime"
               name="transactionDate"
               value={date.toISOString().slice(0, 16)}
               onChange={handleChange}
