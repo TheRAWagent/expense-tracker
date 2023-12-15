@@ -22,7 +22,7 @@ form
 }
 form input
 {
-  width: 100%;
+  width: auto;
   background-color: transparent;
   color: #ddd;
   border: 2px solid #30313d;
@@ -34,6 +34,8 @@ form div.basic
   display: flex;
   flex-direction: row;
   justify-content: center;
+  align-items: center;
+  gap: 50px;
 }
 
 .head{
@@ -44,13 +46,15 @@ form div.basic
   height: 30px;
   margin: 10px;
 }
-
 .expenseDate{
-  height: 30px;
-  margin: 10px 10px;
+  color: #ddd;
 }
 
 .addDescription{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   height: 30px;
   margin: 10px 10px;
 }

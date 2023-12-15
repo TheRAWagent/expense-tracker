@@ -1,5 +1,10 @@
-import { useEffect, useState} from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
+import DateTimePicker from 'react-datetime-picker'
+import 'react-datetime-picker/dist/DateTimePicker.css';
+import 'react-calendar/dist/Calendar.css';
+import 'react-clock/dist/Clock.css';
+
 
 function App(): JSX.Element {
   const [transactions, setTransactions] = useState<{ name: string, date: string, description: string, price: number }[]>([])
@@ -15,17 +20,17 @@ function App(): JSX.Element {
     })
     setBalance(total)
   }
-  , [transactions])
-    const getData=async ()=>{
-      await fetch(`${APIURL}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+    , [transactions])
+  const getData = async () => {
+    await fetch(`${APIURL}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })
       .then(res => res.json())
       .then(data => setTransactions(data))
-    }
+  }
 
   const sendData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -72,14 +77,7 @@ function App(): JSX.Element {
         <form method='POST' onSubmit={sendData}>
           <div className='basic'>
             <input className='expenseName' type="text" name="transactionName" value={name} onChange={handleChange} id="" placeholder='name' />
-            <input
-              className='expenseDate'
-              type="datetime"
-              name="transactionDate"
-              value={date.toISOString().slice(0, 16)}
-              onChange={handleChange}
-              placeholder='date'
-            />
+            <DateTimePicker value={date} onChange={date => setDate(date ? date : new Date())} className="expenseDate" />
           </div>
           <div className='addDescription'>
             <input type="text" name="txnDescription" id="" placeholder='Description' value={description} onChange={handleChange} />
