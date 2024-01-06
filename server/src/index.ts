@@ -1,62 +1,57 @@
-import express from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
+import { createHTTPServer } from '@trpc/server/adapters/standalone';
+import { publicProcedure, router } from './trpc';
 import Transaction from "./models/TransactionModel"
-import ConnectDB from "./config/ConnectDB";
+import connectDB from './config/ConnectDB';
+import * as z from 'zod'
+import cors from 'cors';
 
-
-
-const app: express.Application = express();
-app.use(bodyParser.json());
-app.use(cors());
-ConnectDB();
-
-app.get('/', (req, res) => {
-    res.redirect(process.env.CLIENT_URL || "localhost:5173");
-})
-
-app.get('/api', (req, res) => {
-    Transaction.find().then((data) => {
-        res.status(200).json(data);
+connectDB();
+const appRouter = router({
+  getTransactions: publicProcedure.query(async () => {
+    try{
+        const Transactions = await Transaction.find();
+        return Transactions;
     }
-    ).catch((error) => {
-        res.status(500).json(error);
+    catch(error){
+        return error;
     }
-    )
 
-})
-
-app.post('/api/addTransaction', async (req, res) => {
-    const price = req.body.name.split(" ")[0];
+  }),
+  addTransaction: publicProcedure.input(
+    z.object({
+        name: z.string(),
+        description: z.string(),
+        date: z.string(),
+    })
+  ).query(async (opts) => {
+    const {name,description,date}: {name: string,description: string,date: string} = opts.input;
+    const parsedDate = new Date(date);
+    const price = name.split(" ")[0];
     if (isNaN(Number(price))) {
-        res.status(500).json({ message: "Price must be a number" });
-        return;
+        return {message: "Price must be a number"};
     }
-    const name = req.body.name.split(" ").slice(1).join(" ");
+    const ExpenseName = name.split(" ").slice(1).join(" ");
 
     const transaction = new Transaction({
         price: price,
-        name: name,
-        description: req.body.description,
-        date: req.body.date
+        name: ExpenseName,
+        description: description,
+        date: parsedDate
     });
-    await transaction.save().then(() => {
-        Transaction.find().then((data) => {
-            res.status(200).json(data);
-        }
-        ).catch((error) => {
-            res.status(500).json(error);
-        }
-        )   
-    }).catch((error) => {
-        res.status(500).json(error);
-    })
+    await transaction.save();
+    const Transactions = await Transaction.find();
+    return Transactions;
+  }),
+});
 
+// Export type router type signature,
+// NOT the router itself.
+export type AppRouter = typeof appRouter;
 
-    // res.json(req.body);
-}
-)
+const server = createHTTPServer({
+  router: appRouter,
+  middleware: cors()
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
-})
+});
+
+server.listen(443);

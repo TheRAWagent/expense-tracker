@@ -1,15 +1,30 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import DateTimePicker from 'react-datetime-picker'
+import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
+import type { AppRouter } from '../../../server/src/index';
+
 import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
-
 
 function App(): JSX.Element {
   const [transactions, setTransactions] = useState<{ name: string, date: string, description: string, price: number }[]>([])
   const APIURL: string = import.meta.env.VITE_API_URL
   const [balance, setBalance] = useState<number>(0)
+  const [name, setName] = useState<string>('')
+  const [date, setDate] = useState<Date>(new Date())
+  const [description, setDescription] = useState<string>('')
+  const client = createTRPCProxyClient<AppRouter>({
+    links: [
+      httpBatchLink({
+        url: APIURL,
+        fetch(url, options) {
+          return fetch(url, { ...options, });
+        },
+      }),
+    ],
+  });
   useEffect(() => {
     getData()
   }, [])
@@ -22,40 +37,33 @@ function App(): JSX.Element {
   }
     , [transactions])
   const getData = async () => {
-    await fetch(`${APIURL}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => res.json())
-      .then(data => setTransactions(data))
+    try {
+      const data: any = await client.getTransactions.query();
+      setTransactions(data);
+    }
+    catch (err) {
+      console.log(err);
+    }
   }
 
   const sendData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await fetch(`${APIURL}/addTransaction`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+    try {
+      const data: any = await client.addTransaction.query({
         name: name,
-        date: date,
+        date: date.toISOString(),
         description: description
-      })
-    })
-      .then(res => res.json())
-      .then(async data => {
-        setName('')
-        setDate(new Date())
-        setDescription('')
-        setTransactions(data)
-      })
+      });
+      // console.log(data);
+      setTransactions(data);
+      setName('')
+      setDate(new Date())
+      setDescription('')
+    }
+    catch (err) {
+      console.log(err);
+    }
   }
-  const [name, setName] = useState<string>('')
-  const [date, setDate] = useState<Date>(new Date())
-  const [description, setDescription] = useState<string>('')
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     switch (e.target.name) {
       case 'transactionName': setName(e.target.value); break;

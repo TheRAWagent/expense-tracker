@@ -10,9 +10,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@trpc/client": "^10.45.0",
     "dotenv": "^16.3.1",
     "react": "^18.2.0",
     "react-datetime-picker": "^5.6.0",
+    "zod": "^3.22.4",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
