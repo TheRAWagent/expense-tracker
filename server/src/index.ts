@@ -48,10 +48,9 @@ const appRouter = router({
 // NOT the router itself.
 export type AppRouter = typeof appRouter;
 
-const server = createHTTPServer({
+createHTTPServer({
   router: appRouter,
-  middleware: cors()
+  middleware: cors(),
+  //Listen on the /api endpoint
 
-});
-
-server.listen(443);
+}).listen(443);
